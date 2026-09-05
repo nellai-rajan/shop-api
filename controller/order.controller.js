@@ -18,11 +18,11 @@ exports.createOrder = async (req, res) => {
         const order = await Order.create(body);
 
         // send whatsapp after save
-        // const whatsappUrls = await sendWhatsApp(order);
-        // console.log("WhatsApp URL====>", whatsappUrls);
+        const whatsappUrls = await sendWhatsApp(order);
+        console.log("WhatsApp URL====>", whatsappUrls);
         return res.json({
             order,
-            // whatsappUrls:[whatsappUrls]
+            whatsappUrls:[whatsappUrls]
         });
     } catch (err) {
         console.error(err);
