@@ -26,7 +26,7 @@ app.use('/api/order', require('./routes/orderRoutes'));
 //   console.log(`Server running on port ${process.env.PORT}`);
 // });
 
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(process.env.DB_URL)
   .then(() => {
     console.log("MongoDB Connected");
 
