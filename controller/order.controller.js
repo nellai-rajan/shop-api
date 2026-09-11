@@ -59,39 +59,63 @@ exports.createOrder = async (req, res) => {
 //   });
 // }
 
+// async function sendWhatsApp(order) {
+
+//     let adminNumbers = [];
+
+//     try {
+//         adminNumbers = process.env.ADMIN_MOBILE
+//             ? JSON.parse(process.env.ADMIN_MOBILE)
+//             : [];
+//     } catch (err) {
+//         console.error("Invalid ADMIN_MOBILE JSON");
+//     }
+
+//     const total = order.items.reduce((sum, item) => {
+//         return sum + (item.quantity * item.price);
+//     }, 0);
+
+//     let message = `🛒 New Order\n\n`;
+//     message += `STORE NAME: ${process.env.STORE_NAME}\n`;
+//     message += `👤 Name: ${order.customerName}\n`;
+//     message += `📞 Phone: ${order.phone}\n\n`;
+//     message += `📦 Items:\n`;
+
+//     order.items.forEach((item, i) => {
+//         message += `${i + 1}. ${item.name} - ${item.quantity}${item.unit} × ₹${item.price} = ₹${item.quantity * item.price}\n`;
+//     });
+
+//     message += `\n💰 Total: ₹${total}`;
+
+//     const encoded = encodeURIComponent(message);
+
+//     return adminNumbers.map(num => {
+//         return `https://wa.me/${num}?text=${encoded}`;
+//     });
+// }
 async function sendWhatsApp(order) {
 
-    let adminNumbers = [];
+  const adminNumbers = JSON.parse(process.env.ADMIN_MOBILE);
 
-    try {
-        adminNumbers = process.env.ADMIN_MOBILE
-            ? JSON.parse(process.env.ADMIN_MOBILE)
-            : [];
-    } catch (err) {
-        console.error("Invalid ADMIN_MOBILE JSON");
-    }
+  let message = `🛒 New Order\n\n`;
+  message += `STORE: ${process.env.STORE_NAME}\n`;
+  message += `Name: ${order.customerName}\n`;
+  message += `Phone: ${order.phone}\n\n`;
 
-    const total = order.items.reduce((sum, item) => {
-        return sum + (item.quantity * item.price);
-    }, 0);
+  order.items.forEach((item, i) => {
+    message += `${i + 1}. ${item.name} - ${item.quantity}${item.unit} × ₹${item.price}\n`;
+  });
 
-    let message = `🛒 New Order\n\n`;
-    message += `STORE NAME: ${process.env.STORE_NAME}\n`;
-    message += `👤 Name: ${order.customerName}\n`;
-    message += `📞 Phone: ${order.phone}\n\n`;
-    message += `📦 Items:\n`;
+  message += `\nTotal: ₹${order.total}`;
 
-    order.items.forEach((item, i) => {
-        message += `${i + 1}. ${item.name} - ${item.quantity}${item.unit} × ₹${item.price} = ₹${item.quantity * item.price}\n`;
-    });
+  const encoded = encodeURIComponent(message);
 
-    message += `\n💰 Total: ₹${total}`;
+  // ✅ separate link for each admin
+  const urls = adminNumbers.map(num => {
+    return `https://wa.me/${num}?text=${encoded}`;
+  });
 
-    const encoded = encodeURIComponent(message);
-
-    return adminNumbers.map(num => {
-        return `https://wa.me/${num}?text=${encoded}`;
-    });
+  return urls;
 }
 
 exports.getAllOrders = async (req, res) => {
