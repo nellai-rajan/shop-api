@@ -13,17 +13,23 @@ const app = express();
 
 const allowedOrigins = [
   // "http://localhost:4200",
-  "https://nellairajanfruitstore.netlify.app",
+  // "https://nellairajanfruitshop.netlify.app",
+  "https://nellairajanfruitstore.netlify.app"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
+    console.log("Origin:", origin);
+
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS"));
+      console.log("Blocked CORS:", origin);
+      callback(null, false);
     }
-  }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
 
