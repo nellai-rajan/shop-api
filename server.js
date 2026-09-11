@@ -6,8 +6,24 @@ const cors = require('cors');
 const app = express();
 
 // app.use(cors());
+// app.use(cors({
+//   origin: "https://nellairajanfruitshop.netlify.app"
+  
+// }));
+
+const allowedOrigins = [
+  // "http://localhost:4200",
+  "https://nellairajanfruitstore.netlify.app/",
+];
+
 app.use(cors({
-  origin: "https://nellairajanfruitshop.netlify.app"
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
 }));
 app.use(express.json());
 
