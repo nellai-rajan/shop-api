@@ -13,7 +13,7 @@ const app = express();
 
 const allowedOrigins = [
   // "http://localhost:4200",
-  "https://nellairajanfruitstore.netlify.app/",
+  "https://nellairajanfruitstore.netlify.app",
 ];
 
 app.use(cors({
